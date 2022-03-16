@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ar.edu.iua</groupId>
-	<artifactId>TrabajoIntegradorGaidoSpitale</artifactId>
+	<artifactId>TrabajoSOA</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>TrabajoIntegradorGaidoSpitale</name>
+	<name>TrabajoSOA</name>
 	<description>Backend IW3</description>
 	<packaging>${packaging.type}</packaging> 
 	
