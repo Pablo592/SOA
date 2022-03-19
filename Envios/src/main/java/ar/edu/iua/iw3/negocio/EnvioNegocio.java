@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +21,8 @@ public class EnvioNegocio implements IEnvioNegocio {
     private EnvioRepository envioDAO;
 
     @Override
-    public Envio cargar(long id) throws NegocioException, NoEncontradoException {
-        Optional<Envio> o;
+    public List<Envio> cargar(long id) throws NegocioException, NoEncontradoException {
+        Optional<List<Envio>> o;
         try {
             o = envioDAO.findByUser(id);
         } catch (Exception e) {

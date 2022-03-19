@@ -16,7 +16,7 @@ public class Envio  implements Serializable {
 
     private long user;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public enum Status{pendiente, enProceso,entregado}
@@ -44,5 +44,21 @@ public class Envio  implements Serializable {
 
     public void setOrden_id(Long orden_id) {
         this.orden_id = orden_id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setOrden_id(long orden_id) {
+        this.orden_id = orden_id;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

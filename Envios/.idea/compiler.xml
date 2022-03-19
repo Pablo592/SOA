@@ -8,11 +8,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="TrabajoSOA" />
         <module name="Usuarios" />
+        <module name="Envios" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Envios" options="-parameters" />
       <module name="TrabajoSOA" options="-parameters" />
       <module name="Usuarios" options="-parameters" />
     </option>

@@ -1,5 +1,6 @@
 package ar.edu.iua.iw3.web;
 
+import ar.edu.iua.iw3.modelo.DTO.UsuarioDatosDTO;
 import ar.edu.iua.iw3.modelo.persistencia.Usuario;
 import ar.edu.iua.iw3.negocio.IUsuarioNegocio;
 import ar.edu.iua.iw3.negocio.excepciones.NegocioException;
@@ -33,6 +34,19 @@ public class UsuarioRestController {
         } catch (NoEncontradoException e) {
             log.error(e.getMessage(), e);
             return new ResponseEntity<Usuario>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(value= "/usuarios-datos/{id}")
+    public ResponseEntity<UsuarioDatosDTO> buscarUsuarioDatos(@PathVariable("id") long id) {
+        try {
+            return new ResponseEntity<UsuarioDatosDTO>(usuarioNegocio.usuarioDatos(id), HttpStatus.OK);
+        } catch (NegocioException e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<UsuarioDatosDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NoEncontradoException e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<UsuarioDatosDTO>(HttpStatus.NOT_FOUND);
         }
     }
 }

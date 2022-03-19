@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class EnvioRestController {
 
@@ -23,15 +25,15 @@ public class EnvioRestController {
 
 
     @GetMapping(value= "/envios/{id}")
-    public ResponseEntity<Envio> buscarUsuario(@PathVariable("id") long id) {
+    public ResponseEntity<List<Envio>> buscarUsuario(@PathVariable("id") long id) {
         try {
-            return new ResponseEntity<Envio>(envioNegocio.cargar(id), HttpStatus.OK);
+            return new ResponseEntity<List<Envio>>(envioNegocio.cargar(id), HttpStatus.OK);
         } catch (NegocioException e) {
             log.error(e.getMessage(), e);
-            return new ResponseEntity<Envio>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<List<Envio>>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NoEncontradoException e) {
             log.error(e.getMessage(), e);
-            return new ResponseEntity<Envio>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<Envio>>(HttpStatus.NOT_FOUND);
         }
     }
 }
