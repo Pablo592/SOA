@@ -30,7 +30,7 @@ public class Direction implements Serializable{
 	private String neighborhood;
 	
 	@Column(length = 100,nullable = false)
-	private String userId;
+	private Integer userId;
 	
 	@Column(length = 100,nullable = false)
 	private String street;
@@ -60,12 +60,11 @@ public class Direction implements Serializable{
 		this.neighborhood = neighborhood;
 	}
 
-
-	public String getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
 
