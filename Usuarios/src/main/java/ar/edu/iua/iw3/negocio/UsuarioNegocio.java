@@ -24,7 +24,11 @@ public class UsuarioNegocio  implements IUsuarioNegocio{
 
     @Autowired
     private RestTemplate enviosRestTemplate;
-
+    @Autowired
+    private RestTemplate direccionesRestTemplate;
+    @Autowired
+    private RestTemplate ordersRestTemplate;
+    
     @Override
     public Usuario cargar(long id) throws NegocioException, NoEncontradoException {
         Optional<Usuario> o;
@@ -40,7 +44,10 @@ public class UsuarioNegocio  implements IUsuarioNegocio{
         return o.get();    }
 
     public UsuarioDatosDTO usuarioDatos(long id) throws NegocioException, NoEncontradoException {
-        List<Object>  direcciones = null;
-        UsuarioDatosDTO userDTO = new UsuarioDatosDTO(cargar(id),direcciones,5, enviosRestTemplate.getEnviosList(String.valueOf(id)).toString().contains("pendiente"));
+        List<Object>  direcciones = (List<Object>) ordersRestTemplate.getDireccionesList(String.valueOf(id));
+        Integer  ordenesCount =  ordersRestTemplate.getOrdenersCount(String.valueOf(id));
+        boolean  envios= enviosRestTemplate.getEnviosList(String.valueOf(id)).toString().contains("pendiente");
+        
+        UsuarioDatosDTO userDTO = new UsuarioDatosDTO(cargar(id),direcciones,ordenesCount, envios);
         return userDTO;    }
 }

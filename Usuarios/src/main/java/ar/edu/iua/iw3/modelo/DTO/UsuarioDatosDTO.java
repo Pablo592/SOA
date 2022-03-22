@@ -9,18 +9,15 @@ public class UsuarioDatosDTO {
 
     public UsuarioDatosDTO(Usuario user, List<Object> direcciones, int cantidadOrdenes, boolean enviosPendientes){
         this.user = user;
-        this.direccioones = direcciones;
+        this.direcciones = direcciones;
         this.cantidadOrdenes = cantidadOrdenes;
         this.enviosPendientes = enviosPendientes;
     }
 
 
     private Usuario user;
-
-   private List<Object> direccioones;
-
+    private List<Object> direcciones;
     private int cantidadOrdenes;
-
     private boolean enviosPendientes;
 
 
@@ -32,12 +29,12 @@ public class UsuarioDatosDTO {
         this.user = user;
     }
 
-    public List<Object> getDireccioones() {
-        return direccioones;
+    public List<Object> getdirecciones() {
+        return direcciones;
     }
 
-    public void setDireccioones(List<Object> direccioones) {
-        this.direccioones = direccioones;
+    public void setdirecciones(List<Object> direcciones) {
+        this.direcciones = direcciones;
     }
 
     public int getCantidadOrdenes() {

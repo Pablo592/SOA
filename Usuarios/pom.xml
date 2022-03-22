@@ -14,7 +14,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>TrabajoSOA</name>
 	<description>Backend IW3</description>
-	<packaging>${packaging.type}</packaging> 
 	
 	<properties>
 		<java.version>11</java.version>

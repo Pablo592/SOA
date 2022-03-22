@@ -22,5 +22,19 @@ public class RestTemplate {
         log.info("Result" + forObject);
         return forObject;
     }
-
+    //EDIT AYEEE	
+    public Object getDireccionesList(String id) {
+        String url = "http://localhost:8082/directions/find_by_user/".concat(id);
+        Object forObject = restTemplate.getForObject(url,Object.class);
+        log.info("Result" + forObject);
+        return forObject;
     }
+    
+    public Integer getOrdenersCount(String id) {
+        String url = "http://localhost:8083/orders/orders_by_user/".concat(id);
+        Integer forObject = (Integer) restTemplate.getForObject(url,Object.class);
+        log.info("Result" + forObject);
+        return forObject;
+    }
+
+}
