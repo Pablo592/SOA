@@ -42,6 +42,18 @@ public class OrderController {
         }
     }
     
+    @GetMapping(value= "/orders/orders_by_user/{id}")
+    public ResponseEntity<Integer> countOrders(@PathVariable("id") long id) {
+        try {
+            return new ResponseEntity<Integer>(orderBusiness.countOrders(id), HttpStatus.OK);
+        } catch (BusinessException e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<Integer>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<Integer>(HttpStatus.NOT_FOUND);
+        }
+    }
     
     @PostMapping(value = "/orders/add", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> add(@RequestBody Order order) {

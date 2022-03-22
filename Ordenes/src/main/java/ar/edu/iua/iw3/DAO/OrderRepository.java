@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
 
 public interface OrderRepository  extends JpaRepository<Order,Long> {
 
-	Optional<Order> findById(Long direction_id);
+	Optional<Order> findById(Long order_id);
+	Integer countDistinctIdOrderByUserId(Long user_id);
 
 }
 

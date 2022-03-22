@@ -10,4 +10,6 @@ public interface IorderBusiness {
 
 	Order loadById(long id_Order) throws NotFoundException, BusinessException;
 
+	Integer countOrders(long id_User) throws NotFoundException, BusinessException;
+
 	}

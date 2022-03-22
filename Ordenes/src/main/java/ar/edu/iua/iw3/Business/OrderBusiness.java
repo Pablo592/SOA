@@ -44,6 +44,18 @@ public class OrderBusiness implements IorderBusiness {
 		}
 		return op.get();
 	}
+	
+	@Override
+	public Integer countOrders(long id_User) throws NotFoundException, BusinessException {
+		Integer num;
+		try {
+			num = OrderDAO.countDistinctIdOrderByUserId(id_User);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+		
+		return num;
+	}
 
 		
 
