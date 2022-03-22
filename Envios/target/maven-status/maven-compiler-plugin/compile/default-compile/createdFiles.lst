@@ -5,6 +5,5 @@ ar/edu/iua/iw3/negocio/excepciones/EncontradoException.class
 ar/edu/iua/iw3/negocio/excepciones/NoEncontradoException.class
 ar/edu/iua/iw3/Iw3Application.class
 ar/edu/iua/iw3/modelo/persistencia/Envio.class
-ar/edu/iua/iw3/modelo/persistencia/Envio$status.class
 ar/edu/iua/iw3/modelo/respository/EnvioRepository.class
 ar/edu/iua/iw3/web/EnvioRestController.class
