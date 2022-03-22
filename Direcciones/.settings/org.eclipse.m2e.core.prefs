@@ -1,4 +1,4 @@
-activeProfiles=h2men, h2file, mysqldev, mysqlprod, war-build, jar-build
+activeProfiles=mysqldev
 eclipse.preferences.version=1
 resolveWorkspaceProjects=true
 version=1

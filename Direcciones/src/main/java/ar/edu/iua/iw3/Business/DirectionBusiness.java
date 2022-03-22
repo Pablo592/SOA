@@ -1,5 +1,6 @@
 package ar.edu.iua.iw3.Business;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -43,6 +44,15 @@ public class DirectionBusiness implements IdirectionBusiness {
 			throw new NotFoundException("La Direction con el id " + id_Direction + " no se encuentra en la BD");
 		}
 		return op.get();
+	}
+
+	@Override
+	public List<Direction> loadByIdUser(Long id_User) throws BusinessException {
+		try {
+			return DirectionDAO.findByUserId(id_User);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
 	}
 
 		
