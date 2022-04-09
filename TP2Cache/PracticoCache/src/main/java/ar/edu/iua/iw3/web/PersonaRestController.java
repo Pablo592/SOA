@@ -1,7 +1,7 @@
 package ar.edu.iua.iw3.web;
 
-import ar.edu.iua.iw3.modelo.persistencia.Personas;
-import ar.edu.iua.iw3.negocio.IPersonasNegocio;
+import ar.edu.iua.iw3.modelo.persistencia.Persona;
+import ar.edu.iua.iw3.negocio.IPersonaNegocio;
 import ar.edu.iua.iw3.negocio.excepciones.NegocioException;
 import ar.edu.iua.iw3.negocio.excepciones.NoEncontradoException;
 import org.slf4j.Logger;
@@ -17,32 +17,32 @@ import java.util.List;
 
 
 @RestController
-public class PersonasRestController {
+public class PersonaRestController {
 
     @Autowired
-    private IPersonasNegocio personasNegocio;
+    private IPersonaNegocio personaNegocio;
 
-    private Logger log = LoggerFactory.getLogger(PersonasRestController.class);
+    private Logger log = LoggerFactory.getLogger(PersonaRestController.class);
 
 
     @GetMapping(value="personas/listar")
-    public ResponseEntity<List<Personas>> listado() {
+    public ResponseEntity<List<Persona>> listado() {
         try {
-            return new ResponseEntity<List<Personas>>(personasNegocio.listado(), HttpStatus.OK);
+            return new ResponseEntity<List<Persona>>(personaNegocio.listado(), HttpStatus.OK);
         } catch (NegocioException e) {
             log.error(e.getMessage(), e);
-            return new ResponseEntity<List<Personas>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<List<Persona>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
     @GetMapping(value="personas/listar/{id}")
-    public ResponseEntity<Personas> buscarUna(@PathVariable("id") long id) {
+    public ResponseEntity<Persona> buscarUna(@PathVariable("id") long id) {
         try {
-            return new ResponseEntity<Personas>(personasNegocio.cargar(id), HttpStatus.OK);
+            return new ResponseEntity<Persona>(personaNegocio.cargar(id), HttpStatus.OK);
         } catch (NegocioException | NoEncontradoException e) {
             log.error(e.getMessage(), e);
-            return new ResponseEntity<Personas>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Persona>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -50,9 +50,9 @@ public class PersonasRestController {
 
 
     @PostMapping(value="personas/agregar")
-    public ResponseEntity<String> agregar(@RequestBody Personas personas) {
+    public ResponseEntity<String> agregar(@RequestBody Persona persona) {
         try {
-            Personas respuesta=personasNegocio.agregar(personas);
+            Persona respuesta= personaNegocio.agregar(persona);
             HttpHeaders responseHeaders=new HttpHeaders();
             responseHeaders.set("location", "/camiones/"+respuesta.getId());
             return new ResponseEntity<String>(responseHeaders, HttpStatus.CREATED);
@@ -66,9 +66,9 @@ public class PersonasRestController {
     }
 
     @PutMapping(value="personas/modificar")
-    public ResponseEntity<String> modificar(@RequestBody Personas personas) {
+    public ResponseEntity<String> modificar(@RequestBody Persona persona) {
         try {
-            personasNegocio.modificar(personas);
+            personaNegocio.modificar(persona);
             return new ResponseEntity<String>(HttpStatus.OK);
         } catch (NegocioException e) {
             log.error(e.getMessage(), e);
@@ -80,7 +80,7 @@ public class PersonasRestController {
     @DeleteMapping(value="personas/eliminar/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") long id) {
         try {
-            personasNegocio.eliminar(id);
+            personaNegocio.eliminar(id);
             return new ResponseEntity<String>(HttpStatus.OK);
         } catch (NegocioException e) {
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);

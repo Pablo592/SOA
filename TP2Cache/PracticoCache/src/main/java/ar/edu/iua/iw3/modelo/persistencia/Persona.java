@@ -3,7 +3,8 @@ package ar.edu.iua.iw3.modelo.persistencia;
 import javax.persistence.*;
 
 @Entity
-public class Personas {
+@Table(name="Personas")
+public class Persona {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

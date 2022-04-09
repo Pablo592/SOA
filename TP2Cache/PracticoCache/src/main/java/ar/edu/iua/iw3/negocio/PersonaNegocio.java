@@ -1,7 +1,7 @@
 package ar.edu.iua.iw3.negocio;
 
-import ar.edu.iua.iw3.modelo.persistencia.Personas;
-import ar.edu.iua.iw3.modelo.repository.PersonasRepository;
+import ar.edu.iua.iw3.modelo.persistencia.Persona;
+import ar.edu.iua.iw3.modelo.repository.PersonaRepository;
 import ar.edu.iua.iw3.negocio.excepciones.NegocioException;
 import ar.edu.iua.iw3.negocio.excepciones.NoEncontradoException;
 import org.slf4j.Logger;
@@ -13,17 +13,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PersonasNegocio implements IPersonasNegocio{
+public class PersonaNegocio implements IPersonaNegocio {
 
-    private Logger log = LoggerFactory.getLogger(PersonasNegocio.class);
+    private Logger log = LoggerFactory.getLogger(PersonaNegocio.class);
 
     @Autowired
-    private PersonasRepository personasDAO;
+    private PersonaRepository personaDAO;
 
     @Override
-    public List<Personas> listado() throws NegocioException {
+    public List<Persona> listado() throws NegocioException {
         try {
-            return personasDAO.findAll();
+            return personaDAO.findAll();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new NegocioException(e);
@@ -32,10 +32,10 @@ public class PersonasNegocio implements IPersonasNegocio{
 
 
     @Override
-    public Personas cargar(long id) throws NegocioException, NoEncontradoException {
-        Optional<Personas> o;
+    public Persona cargar(long id) throws NegocioException, NoEncontradoException {
+        Optional<Persona> o;
         try {
-            o = personasDAO.findById(id);
+            o = personaDAO.findById(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new NegocioException(e);
@@ -48,10 +48,10 @@ public class PersonasNegocio implements IPersonasNegocio{
 
 
     @Override
-    public Personas agregar(Personas personas) throws NegocioException {
+    public Persona agregar(Persona persona) throws NegocioException {
 
             try {
-                return personasDAO.save(personas);
+                return personaDAO.save(persona);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 throw new NegocioException(e);
@@ -61,10 +61,10 @@ public class PersonasNegocio implements IPersonasNegocio{
 
 
     @Override
-    public Personas modificar(Personas personas) throws NegocioException {
+    public Persona modificar(Persona persona) throws NegocioException {
 
         try {
-            return personasDAO.save(personas);
+            return personaDAO.save(persona);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new NegocioException(e);
@@ -76,7 +76,7 @@ public class PersonasNegocio implements IPersonasNegocio{
     public void eliminar(long id) throws NegocioException, NoEncontradoException {
         cargar(id);
         try {
-            personasDAO.deleteById(id);
+            personaDAO.deleteById(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new NegocioException(e);
