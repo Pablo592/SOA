@@ -1,56 +1,57 @@
 package ar.edu.iua.iw3.modelo.cache;
 
+import ar.edu.iua.iw3.modelo.persistencia.Persona;
+import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheService.IdentifiableValue;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
-import java.io.IOException;
-import java.math.BigInteger;
+public class Memcache{
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+private  MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 
 
-@SuppressWarnings("serial")
-public class Memcache extends HttpServlet {
 
-    @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException,
+    public Object buscar(Long id){
+        MemcacheService.IdentifiableValue datoBuscado = syncCache.getIdentifiable(id);
+        return datoBuscado.getValue();
+    }
+
+    public void agregar(Persona persona,int tiempo){
+        syncCache.put(persona.getId(), persona, Expiration.byDeltaMillis(tiempo));
+        return;
+    }
+
+    public void actalizar(Persona persona,int tiempo){
+        syncCache.putIfUntouched(persona.getId(), syncCache.getIdentifiable(persona.getId()), persona, Expiration.byDeltaMillis(tiempo));
+        return;
+    }
+
+
+    public void eliminar(Long id){
+        syncCache.delete(id);
+        return;
+    }
+
+/*
+    public void doGet() throws IOException,
             ServletException {
-        String path = req.getRequestURI();
-        if (path.startsWith("/favicon.ico")) {
-            return; // ignore the request for favicon.ico
-        }
 
         String key = "count-concurrent";
         // Using the synchronous cache.
         MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 
         // Write this value to cache using getIdentifiable and putIfUntouched.
-        for (long delayMs = 1; delayMs < 1000; delayMs *= 2) {
+
             IdentifiableValue oldValue = syncCache.getIdentifiable(key);
             byte[] newValue = oldValue == null ? BigInteger.valueOf(0).toByteArray() : increment((byte[]) oldValue.getValue()); // newValue depends on old value
-            resp.setContentType("text/plain");
-            resp.getWriter().print("Value is " + new BigInteger(newValue).intValue() + "\n");
             if (oldValue == null) {
                 // Key doesn't exist. We can safely put it in cache.
-                syncCache.put(key, newValue);
-                break;
-            } else if (syncCache.putIfUntouched(key, oldValue, newValue)) {
+                syncCache.put(key, "valor nuevo");
+
+            } else if (syncCache.putIfUntouched(key, oldValue, "valor actualizado")) {
                 // newValue has been successfully put into cache.
-                break;
-            } else {
-                // Some other client changed the value since oldValue was retrieved.
-                // Wait a while before trying again, waiting longer on successive loops.
-                try {
-                    Thread.sleep(delayMs);
-                } catch (InterruptedException e) {
-                    throw new ServletException("Error when sleeping", e);
-                }
             }
-        }
+
     }
 
     /**
@@ -58,10 +59,10 @@ public class Memcache extends HttpServlet {
      * @param oldValue a byte array with the old value
      * @return         a byte array as the old value increased by one
      */
-    private byte[] increment(byte[] oldValue) {
+   /* private byte[] increment(byte[] oldValue) {
         long val = new BigInteger(oldValue).intValue();
         val++;
         return BigInteger.valueOf(val).toByteArray();
     }
-
+*/
 }

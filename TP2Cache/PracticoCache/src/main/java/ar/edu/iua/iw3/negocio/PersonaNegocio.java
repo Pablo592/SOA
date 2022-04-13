@@ -1,5 +1,6 @@
 package ar.edu.iua.iw3.negocio;
 
+import ar.edu.iua.iw3.modelo.cache.Memcache;
 import ar.edu.iua.iw3.modelo.persistencia.Persona;
 import ar.edu.iua.iw3.modelo.repository.PersonaRepository;
 import ar.edu.iua.iw3.negocio.excepciones.NegocioException;
@@ -16,6 +17,8 @@ import java.util.Optional;
 public class PersonaNegocio implements IPersonaNegocio {
 
     private Logger log = LoggerFactory.getLogger(PersonaNegocio.class);
+    private Memcache cache = new Memcache();
+
 
     @Autowired
     private PersonaRepository personaDAO;
@@ -33,9 +36,14 @@ public class PersonaNegocio implements IPersonaNegocio {
 
     @Override
     public Persona cargar(long id) throws NegocioException, NoEncontradoException {
-        Optional<Persona> o;
+        Optional<Persona> o = null;
         try {
-            o = personaDAO.findById(id);
+            if(cache.buscar(id) == null) {
+                o = personaDAO.findById(id);
+                cache.agregar(o.get(), 3600000);
+            }else{
+                o = (Optional<Persona>) cache.buscar(id);
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new NegocioException(e);
@@ -49,21 +57,19 @@ public class PersonaNegocio implements IPersonaNegocio {
 
     @Override
     public Persona agregar(Persona persona) throws NegocioException {
-
             try {
                 return personaDAO.save(persona);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 throw new NegocioException(e);
             }
-
     }
 
 
     @Override
     public Persona modificar(Persona persona) throws NegocioException {
-
         try {
+            cache.actalizar(persona,3600000);
             return personaDAO.save(persona);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -76,6 +82,7 @@ public class PersonaNegocio implements IPersonaNegocio {
     public void eliminar(long id) throws NegocioException, NoEncontradoException {
         cargar(id);
         try {
+            cache.eliminar(id);
             personaDAO.deleteById(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
