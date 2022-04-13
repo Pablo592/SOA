@@ -1,0 +1,24 @@
+<component name="libraryTable">
+  <library name="checker-compat-qual-2.5.5">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Descargas/jar_files/checker-compat-qual-2.5.5.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/commons-codec-1.11.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/commons-logging-1.2.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/error_prone_annotations-2.5.1.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/failureaccess-1.0.1.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/google-http-client-1.41.7.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/google-http-client-appengine-1.41.7.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/grpc-context-1.27.2.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/guava-30.1.1-android.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/httpclient-4.5.13.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/httpcore-4.4.15.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/j2objc-annotations-1.3.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/jsr305-3.0.2.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/opencensus-api-0.31.0.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/jar_files/opencensus-contrib-http-util-0.31.0.jar!/" />
+      <root url="jar://$USER_HOME$/Descargas/appengine-api-1.0-sdk-2.0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
