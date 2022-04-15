@@ -5,11 +5,14 @@ import ar.edu.iua.iw3.modelo.persistencia.Persona;
 import ar.edu.iua.iw3.modelo.repository.PersonaRepository;
 import ar.edu.iua.iw3.negocio.excepciones.NegocioException;
 import ar.edu.iua.iw3.negocio.excepciones.NoEncontradoException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,9 @@ public class PersonaNegocio implements IPersonaNegocio {
     @Autowired
     private PersonaRepository personaDAO;
 
+    public PersonaNegocio() throws IOException {
+    }
+
     @Override
     public List<Persona> listado() throws NegocioException {
         try {
@@ -35,21 +41,24 @@ public class PersonaNegocio implements IPersonaNegocio {
 
 
     @Override
-    public Persona cargar(long id) throws NegocioException, NoEncontradoException {
+    public Persona cargar(long id) throws NegocioException, NoEncontradoException, JsonProcessingException {
         Optional<Persona> o = null;
-        try {
-            if(cache.buscar(id) == null) {
+        String datoBuscado = cache.buscar(id);
+        if(datoBuscado == null || datoBuscado == "") {
+            try {
                 o = personaDAO.findById(id);
-                cache.agregar(o.get(), 3600000);
-            }else{
-                o = (Optional<Persona>) cache.buscar(id);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                throw new NegocioException(e);
             }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new NegocioException(e);
-        }
-        if (!o.isPresent()) {
-            throw new NoEncontradoException("No se encuentra la persona con id=" + id);
+            if (!o.isPresent()) {
+                throw new NoEncontradoException("No se encuentra la persona con id=" + id);
+            }else {
+                cache.agregar(o.get(), 3600);
+            }
+        }else{
+            Persona persona = new ObjectMapper().readValue(datoBuscado, Persona.class);
+            o = Optional.ofNullable(persona);
         }
         return o.get();
     }
@@ -69,7 +78,10 @@ public class PersonaNegocio implements IPersonaNegocio {
     @Override
     public Persona modificar(Persona persona) throws NegocioException {
         try {
-            cache.actalizar(persona,3600000);
+            String datoBuscado = cache.buscar(persona.getId());
+            if(datoBuscado != null) {
+                cache.actualizar(persona, 3600);
+            }
             return personaDAO.save(persona);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -79,7 +91,7 @@ public class PersonaNegocio implements IPersonaNegocio {
 
 
     @Override
-    public void eliminar(long id) throws NegocioException, NoEncontradoException {
+    public void eliminar(long id) throws NegocioException, NoEncontradoException, JsonProcessingException {
         cargar(id);
         try {
             cache.eliminar(id);

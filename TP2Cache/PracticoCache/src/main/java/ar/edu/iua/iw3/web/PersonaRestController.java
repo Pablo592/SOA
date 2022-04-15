@@ -4,15 +4,18 @@ import ar.edu.iua.iw3.modelo.persistencia.Persona;
 import ar.edu.iua.iw3.negocio.IPersonaNegocio;
 import ar.edu.iua.iw3.negocio.excepciones.NegocioException;
 import ar.edu.iua.iw3.negocio.excepciones.NoEncontradoException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -36,20 +39,23 @@ public class PersonaRestController {
     }
 
 
-    @GetMapping(value="personas/listar/{id}")
-    public ResponseEntity<Persona> buscarUna(@PathVariable("id") long id) {
+    @GetMapping(value="personas/{id}")
+    public HttpEntity<? extends Serializable> buscarUna(@PathVariable("id") long id) {
         try {
             return new ResponseEntity<Persona>(personaNegocio.cargar(id), HttpStatus.OK);
-        } catch (NegocioException | NoEncontradoException e) {
-            log.error(e.getMessage(), e);
-            return new ResponseEntity<Persona>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NegocioException e) {
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NoEncontradoException e) {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        } catch (JsonProcessingException e) {
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
 
 
-    @PostMapping(value="personas/agregar")
+    @PostMapping(value="personas")
     public ResponseEntity<String> agregar(@RequestBody Persona persona) {
         try {
             Persona respuesta= personaNegocio.agregar(persona);
@@ -65,7 +71,7 @@ public class PersonaRestController {
         }
     }
 
-    @PutMapping(value="personas/modificar")
+    @PutMapping(value="personas")
     public ResponseEntity<String> modificar(@RequestBody Persona persona) {
         try {
             personaNegocio.modificar(persona);
@@ -77,7 +83,7 @@ public class PersonaRestController {
     }
 
 
-    @DeleteMapping(value="personas/eliminar/{id}")
+    @DeleteMapping(value="personas/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") long id) {
         try {
             personaNegocio.eliminar(id);
@@ -86,6 +92,8 @@ public class PersonaRestController {
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NoEncontradoException e) {
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-        }
+        }catch (JsonProcessingException e) {
+        return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     }
 }

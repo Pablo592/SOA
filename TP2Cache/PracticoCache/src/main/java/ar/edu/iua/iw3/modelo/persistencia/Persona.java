@@ -1,10 +1,13 @@
 package ar.edu.iua.iw3.modelo.persistencia;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="Personas")
-public class Persona {
+public class Persona implements Serializable {
+
+    public Persona(){}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +18,7 @@ public class Persona {
 
     @Column(nullable = false)
     private String apellido;
+
 
     public Long getId() {
         return id;
@@ -39,4 +43,10 @@ public class Persona {
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
+
+    public String getJson(){
+        String json = "{\"id\":"+this.id+",\"nombre\": \""+this.nombre+"\",\"apellido\": \""+this.apellido+"\"}";
+        return json;
+    }
+
 }
