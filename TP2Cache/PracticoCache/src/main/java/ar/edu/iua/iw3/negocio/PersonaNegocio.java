@@ -12,7 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +44,48 @@ public class PersonaNegocio implements IPersonaNegocio {
         }
     }
 
+    @Override
+    public List<Persona> listarContenidoNombre(String letras) throws NegocioException, NoEncontradoException, JsonProcessingException {
+        String encuentro;
+        String[] indices;
+        String indice = "";
+        Optional<List<Persona>> o = null;
+        List<Persona> pers = new ArrayList<Persona>();
+        String datoBuscado = cache.buscarLetras("Lista"+ letras);
+        if(datoBuscado == null || datoBuscado.length() < 2) {
+            try {
+                o = Optional.ofNullable(personaDAO.findAllByNombreContains(letras));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                throw new NegocioException(e);
+            }
+            if (!o.isPresent()) {
+                throw new NoEncontradoException("No se encuentra la persona con el nombre con las letras " + letras);
+            }else {
+
+                for (Persona p : o.get()) {
+                 indice =  indice.concat(p.getId() + ",");
+                    cache.agregar(p, 3600);
+                }
+                System.out.println("Datos de la lista agregados al cache");
+                cache.agregarLista("Lista"+ letras,indice, 3600);
+            }
+        }else{
+            indices = datoBuscado.split(",");
+
+            for (int i = 0; i < indices.length - 1; i++) {
+
+                    encuentro = cache.buscar(Long.valueOf(indices[i].trim()));
+                      //      if(encuentro != null || encuentro.length() > 10)
+                    pers.add(new ObjectMapper().readValue(encuentro, Persona.class));
+            }
+            System.out.println("Datos de la lista sacados del cache");
+            o = Optional.ofNullable(pers);
+        }
+        return o.get();
+    }
+
+
 
     @Override
     public Persona cargar(long id) throws NegocioException, NoEncontradoException, JsonProcessingException {
@@ -55,10 +102,12 @@ public class PersonaNegocio implements IPersonaNegocio {
                 throw new NoEncontradoException("No se encuentra la persona con id=" + id);
             }else {
                 cache.agregar(o.get(), 3600);
+                System.out.println(o.get() + "Guardado en el cache */*/*/*/*/*/*/");
             }
         }else{
             Persona persona = new ObjectMapper().readValue(datoBuscado, Persona.class);
             o = Optional.ofNullable(persona);
+            System.out.println(o.get() + " Sacado del cache");
         }
         return o.get();
     }
@@ -101,6 +150,5 @@ public class PersonaNegocio implements IPersonaNegocio {
             throw new NegocioException(e);
         }
     }
-
 
 }

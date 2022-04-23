@@ -17,18 +17,28 @@ private   MemcachedClient mcc;
 }
 
     public String buscar(Long id){
-        if(mcc.get(String.valueOf(id)) != null)
-        System.out.println(mcc.get(String.valueOf(id)) + " sacado del cache */*/*/*/*/*/*/*/*/*/*/*//*/");
-
-        return mcc.get(String.valueOf(id)) == null ? null : (String) mcc.get(String.valueOf(id));
+        String dato = "";
+        dato = (String) mcc.get(String.valueOf(id));
+        return mcc.get(String.valueOf(id)) == null ? null : dato;
     }
+
+    public String buscarLetras(String letras){
+        String dato = "";
+        dato = (String) mcc.get(letras);
+        return dato == null ? null : dato;
+    }
+
+
 
     public boolean agregar(Persona persona,int tiempo){
-
-        System.out.println(mcc.add(String.valueOf(persona.getId()), tiempo, persona.getJson()) + " guardado en el cache */*/*/*/*/*/*/*/*/*/*/*//*/");
-
-        return  mcc.add(String.valueOf(persona.getId()), tiempo, persona).isDone();
+        return  mcc.add(String.valueOf(persona.getId()), tiempo, persona.getJson()).isDone();
     }
+
+    public boolean agregarLista(String clave,String valor,int tiempo){
+        boolean guardo = mcc.add(clave, tiempo,valor).isDone();
+        return  guardo;
+    }
+
 
 
     public boolean actualizar(Persona persona,int tiempo){

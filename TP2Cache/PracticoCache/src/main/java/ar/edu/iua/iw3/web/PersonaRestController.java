@@ -38,6 +38,16 @@ public class PersonaRestController {
         }
     }
 
+    @GetMapping(value="personas/contains-nombre/{letras}")
+    public ResponseEntity<List<Persona>> listadoContenidoNombre(@PathVariable("letras") String letras) throws Exception {
+        try {
+            return new ResponseEntity<List<Persona>>(personaNegocio.listarContenidoNombre(letras), HttpStatus.OK);
+        } catch (NegocioException | NoEncontradoException | JsonProcessingException e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<List<Persona>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @GetMapping(value="personas/{id}")
     public HttpEntity<? extends Serializable> buscarUna(@PathVariable("id") long id) {
@@ -60,7 +70,7 @@ public class PersonaRestController {
         try {
             Persona respuesta= personaNegocio.agregar(persona);
             HttpHeaders responseHeaders=new HttpHeaders();
-            responseHeaders.set("location", "/camiones/"+respuesta.getId());
+            responseHeaders.set("location", "/personas/"+respuesta.getId());
             return new ResponseEntity<String>(responseHeaders, HttpStatus.CREATED);
         } catch (NegocioException e) {
             log.error(e.getMessage(), e);

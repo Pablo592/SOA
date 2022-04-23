@@ -14,4 +14,5 @@ public interface IPersonaNegocio {
     Persona agregar(Persona persona) throws NegocioException;
     Persona modificar(Persona persona) throws NegocioException;
     void eliminar(long id) throws NegocioException, NoEncontradoException, JsonProcessingException;
+    List<Persona> listarContenidoNombre(String letras) throws NegocioException, NoEncontradoException, JsonProcessingException;
 }
