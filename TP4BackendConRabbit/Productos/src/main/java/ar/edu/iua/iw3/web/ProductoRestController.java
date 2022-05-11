@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.amqp.core.AmqpTemplate;
 import java.util.List;
 
 @RestController
@@ -25,6 +26,9 @@ public class ProductoRestController {
 
     @Autowired
     private IProductoNegocio productoNegocio;
+    
+    @Autowired
+    private AmqpTemplate queueSender ;
 
     @GetMapping(value= "/productos/{id}/{cantidad}")
     public HttpEntity<? extends Object> buscarUsuario(@PathVariable("id") long id, @PathVariable("cantidad") int cantidad) {
@@ -63,4 +67,14 @@ public class ProductoRestController {
         }
 
     }
+    
+   
+    @GetMapping("/test/{id}")
+    public String send(@PathVariable("id") long id){
+
+      String mensage = String.valueOf(id);
+
+      queueSender.convertAndSend("rabbitQueue", mensage); //exc -
+      return "ok. done";
+  }
 }
