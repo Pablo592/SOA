@@ -11,4 +11,6 @@ public interface IProductoNegocio {
     StockDTO existenciaStock(long id, int cantidad) throws NegocioException, NoEncontradoException;
     List<Producto> listarProductoTitulo(String letras) throws NegocioException, NoEncontradoException;
     List<Producto> cargarTodo() throws NegocioException;
+	void discountStock(String message) throws NegocioException, NoEncontradoException;
+	
 }

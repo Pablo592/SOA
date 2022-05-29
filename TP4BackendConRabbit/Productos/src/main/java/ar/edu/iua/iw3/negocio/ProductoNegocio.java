@@ -1,10 +1,15 @@
 package ar.edu.iua.iw3.negocio;
 
 import ar.edu.iua.iw3.modelo.DTO.StockDTO;
+import ar.edu.iua.iw3.modelo.persistencia.Orden;
 import ar.edu.iua.iw3.modelo.persistencia.Producto;
+
 import ar.edu.iua.iw3.modelo.repository.ProductoRepository;
 import ar.edu.iua.iw3.negocio.excepciones.NegocioException;
 import ar.edu.iua.iw3.negocio.excepciones.NoEncontradoException;
+
+import ar.edu.iua.iw3.web.RestTemplate.RestTemplateOrden;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,23 +24,29 @@ public class ProductoNegocio implements IProductoNegocio{
 
     @Autowired
     private ProductoRepository productoDAO;
+    private RestTemplateOrden ordenService;
 
     private Logger log = LoggerFactory.getLogger(ProductoNegocio.class);
 
 
     @Override
     public StockDTO existenciaStock(long id, int cantidad) throws NegocioException, NoEncontradoException {
-        Optional<Producto> o;
-        try {
-            o = productoDAO.findById(id);
+        Optional<Producto> o= productById(id);
+        return (o.get().getStock() >= cantidad)? new StockDTO(true,o.get().getPrecio()) : new StockDTO(false,o.get().getPrecio());
+    }
+    
+    public Optional<Producto> productById(long id) throws NegocioException, NoEncontradoException{
+    	Optional<Producto> p;
+    	try {
+            p = productoDAO.findById(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new NegocioException(e);
         }
-        if (!o.isPresent()) {
+        if (!p.isPresent()) {
             throw new NoEncontradoException("No se encuentra el Producto con id=" + id);
         }
-        return (o.get().getStock() >= cantidad)? new StockDTO(true,o.get().getPrecio()) : new StockDTO(false,o.get().getPrecio());
+        return p;
     }
 
     @Override
@@ -65,5 +76,31 @@ public class ProductoNegocio implements IProductoNegocio{
         }
         return o.get();
     }
+    
+    @Override
+    public void discountStock(String id) throws NegocioException, NoEncontradoException {
+    	//Obtenemos el id de la orden
+    	 Long orderId= Long.parseLong(id) ;
+    	 
+    	 //Buscamos la orden por Id
+    	 Orden order= ordenService.getOrderById(orderId);
+    	 
+    	 //Buscamos el Producto
+    	 Optional<Producto> p=  productById(Long.valueOf(order.getProductoId()));
+    	
+    	 //Descontamos el Stock
+    	 int stockViejo= p.get().getStock();
+    	 int stockNuevo= stockViejo-order.getCantidad();
+    	 p.get().setStock(stockNuevo);
+    	 try {
+    		 productoDAO.update(p);
+         } catch (Exception e) {
+             log.error(e.getMessage(), e);
+             throw new NegocioException(e);
+         }  	
+    	 
+    }
+    
+    
 
 }

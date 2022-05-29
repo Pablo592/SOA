@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
     Optional<Producto> findById(Long id);
     List<Producto> findAllByTituloContaining(String letras);
+	void update(Optional<Producto> p);
 }

@@ -1,4 +1,4 @@
-package ar.edu.iua.iw3.web;
+package ar.edu.iua.iw3.web.RestController;
 
 import ar.edu.iua.iw3.modelo.DTO.StockDTO;
 import ar.edu.iua.iw3.modelo.persistencia.Producto;
