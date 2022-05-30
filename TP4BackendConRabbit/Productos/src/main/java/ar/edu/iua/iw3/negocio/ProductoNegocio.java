@@ -31,11 +31,11 @@ public class ProductoNegocio implements IProductoNegocio{
 
     @Override
     public StockDTO existenciaStock(long id, int cantidad) throws NegocioException, NoEncontradoException {
-        Optional<Producto> o= productById(id);
-        return (o.get().getStock() >= cantidad)? new StockDTO(true,o.get().getPrecio()) : new StockDTO(false,o.get().getPrecio());
+        Producto o= productById(id);
+        return (o.getStock() >= cantidad)? new StockDTO(true,o.getPrecio()) : new StockDTO(false,o.getPrecio());
     }
     
-    public Optional<Producto> productById(long id) throws NegocioException, NoEncontradoException{
+    public Producto productById(long id) throws NegocioException, NoEncontradoException{
     	Optional<Producto> p;
     	try {
             p = productoDAO.findById(id);
@@ -46,7 +46,7 @@ public class ProductoNegocio implements IProductoNegocio{
         if (!p.isPresent()) {
             throw new NoEncontradoException("No se encuentra el Producto con id=" + id);
         }
-        return p;
+        return p.get();
     }
 
     @Override
@@ -85,15 +85,24 @@ public class ProductoNegocio implements IProductoNegocio{
     	 //Buscamos la orden por Id
     	 Orden order= ordenService.getOrderById(orderId);
     	 
+    	/*----Prueba Unitaria----*/
+    	/*Orden order = new Orden();
+     	order.setId(1);
+     	order.setProductoId(1);
+     	order.setCantidad(2);
+     	System.out.println("orden:"+order.toString());*/
+    	 
     	 //Buscamos el Producto
-    	 Optional<Producto> p=  productById(Long.valueOf(order.getProductoId()));
+    	 Producto p=  productById(Long.valueOf(order.getProductoId()));
     	
+    	 
     	 //Descontamos el Stock
-    	 int stockViejo= p.get().getStock();
+    	 int stockViejo= p.getStock();
     	 int stockNuevo= stockViejo-order.getCantidad();
-    	 p.get().setStock(stockNuevo);
+    	 p.setStock(stockNuevo);
+    	 System.out.println(p.toString());
     	 try {
-    		 productoDAO.update(p);
+    		 productoDAO.save(p);
          } catch (Exception e) {
              log.error(e.getMessage(), e);
              throw new NegocioException(e);

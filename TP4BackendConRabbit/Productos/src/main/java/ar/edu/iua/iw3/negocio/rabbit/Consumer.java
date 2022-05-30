@@ -16,13 +16,10 @@ public class Consumer {
     private IProductoNegocio productoNegocio;
 	
     @RabbitListener(queues = "rabbitQueue")
-    public void receive(String message) throws NoEncontradoException  {
-    	try {
-			productoNegocio.discountStock(message);
-		} catch (NegocioException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        System.out.println("Message " + message + "  " + LocalDateTime.now());
+    public void receive(String message) throws NegocioException,NoEncontradoException  {
+    	productoNegocio.discountStock(message);
+		System.out.println("Message " + message + "  " + LocalDateTime.now());
+    	
     }
+    
 }

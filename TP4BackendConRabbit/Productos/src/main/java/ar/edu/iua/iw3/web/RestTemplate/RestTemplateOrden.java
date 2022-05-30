@@ -22,6 +22,7 @@ public class RestTemplateOrden {
         Orden forObject = restTemplate.getForObject(url, Orden.class);
         log.info("Result" + forObject);
         System.out.println(forObject.toString());
+    	
         return forObject;
     }
 }

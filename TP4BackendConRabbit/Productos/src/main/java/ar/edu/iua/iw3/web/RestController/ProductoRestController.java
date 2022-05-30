@@ -73,8 +73,7 @@ public class ProductoRestController {
     public String send(@PathVariable("id") long id){
 
       String mensage = String.valueOf(id);
-
-      queueSender.convertAndSend("rabbitQueue", mensage); //exc -
+      queueSender.convertAndSend("rabbitQueue", mensage); 
       return "ok. done";
   }
 }
