@@ -24,6 +24,7 @@ public class ProductoNegocio implements IProductoNegocio{
 
     @Autowired
     private ProductoRepository productoDAO;
+    @Autowired
     private RestTemplateOrden ordenService;
 
     private Logger log = LoggerFactory.getLogger(ProductoNegocio.class);
@@ -81,6 +82,7 @@ public class ProductoNegocio implements IProductoNegocio{
     public void discountStock(String id) throws NegocioException, NoEncontradoException {
     	//Obtenemos el id de la orden
     	 Long orderId= Long.parseLong(id) ;
+
     	 
     	 //Buscamos la orden por Id
     	 Orden order= ordenService.getOrderById(orderId);

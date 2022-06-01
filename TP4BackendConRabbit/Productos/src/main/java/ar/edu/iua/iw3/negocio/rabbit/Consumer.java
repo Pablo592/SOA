@@ -17,9 +17,9 @@ public class Consumer {
 	
     @RabbitListener(queues = "rabbitQueue")
     public void receive(String message) throws NegocioException,NoEncontradoException  {
-    	productoNegocio.discountStock(message);
+
 		System.out.println("Message " + message + "  " + LocalDateTime.now());
-    	
+        productoNegocio.discountStock(message);
     }
     
 }

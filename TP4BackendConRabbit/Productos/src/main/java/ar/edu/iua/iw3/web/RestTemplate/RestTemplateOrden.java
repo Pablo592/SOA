@@ -18,11 +18,8 @@ public class RestTemplateOrden {
     org.springframework.web.client.RestTemplate restTemplate;
     
     public Orden getOrderById(Long id) {
-        String url = "http://localhost:8090/ordenes/".concat(String.valueOf(id));
+        String url = "http://ec2-34-229-173-81.compute-1.amazonaws.com:8080/api/ordenes/".concat(String.valueOf(id));
         Orden forObject = restTemplate.getForObject(url, Orden.class);
-        log.info("Result" + forObject);
-        System.out.println(forObject.toString());
-    	
         return forObject;
     }
 }
